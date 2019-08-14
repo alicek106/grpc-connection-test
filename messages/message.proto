@@ -1,0 +1,19 @@
+syntax = 'proto3';
+
+package messages;
+// option go_package = "messages";
+
+service Ordering {
+    rpc Order(OrderRequest) returns (OrderResponse) {}
+}
+
+message OrderRequest {
+    string stuff = 1;
+    int32 money = 2;
+}
+
+message OrderResponse {
+    string ip = 1;
+    string stuff = 2;
+    int32 change = 3;
+}

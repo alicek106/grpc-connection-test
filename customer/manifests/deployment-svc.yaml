@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grpc-connection-test-customer
+spec:
+  selector:
+    matchLabels:
+      app: grpc-connection-test-customer
+  template:
+    metadata:
+      name: grpc-connection-test-customer
+      labels:
+        app: grpc-connection-test-customer
+    spec:
+      containers:
+        - image: alicek106/grpc-connection-test:customer
+          name: grpc-connection-test-customer
+          ports:
+            - containerPort: 8080
+          livenessProbe: 
+            httpGet:
+              path: /healthz
+              port: 8080
+          readinessProbe: 
+            httpGet:
+              path: /healthz
+              port: 8080
+          env:
+            - name: ORDER_ADDR
+              value: order:80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grpc-connection-test-customer
+spec:
+  type: NodePort
+  ports:
+    - nodePort: 30000
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: grpc-connection-test-customer
